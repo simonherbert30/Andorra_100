@@ -9,6 +9,70 @@ const trainingPlan = {
   raceElevation: 3900,
   
   weeks: [
+    // imported prior training from PNG
+    {
+      weekNumber: -4,
+      startDate: "2026-02-02",
+      endDate: "2026-02-08",
+      weeklyKm: 25.39,
+      focus: "Prior Training",
+      runs: [
+        { date: "2026-02-02", dayName: "Monday", name: "Lunch Run", distance: 10, elevation: 0, type: "road", pace: "6:30-7:00/km", completed: true },
+        { date: "2026-02-04", dayName: "Wednesday", name: "Evening Run", distance: 4.9, elevation: 0, type: "road", pace: "6:30-7:00/km", completed: true },
+        { date: "2026-02-08", dayName: "Sunday", name: "Morning Run", distance: 8.4, elevation: 0, type: "road", pace: "6:30-7:00/km", completed: true }
+      ]
+    },
+    {
+      weekNumber: -3,
+      startDate: "2026-02-09",
+      endDate: "2026-02-15",
+      weeklyKm: 24.39,
+      focus: "Prior Training",
+      runs: [
+        { date: "2026-02-09", dayName: "Monday", name: "Evening Run", distance: 4, elevation: 0, type: "road", pace: "6:30-7:00/km", completed: true },
+        { date: "2026-02-11", dayName: "Wednesday", name: "Lunch Run", distance: 5.9, elevation: 0, type: "road", pace: "6:30-7:00/km", completed: true },
+        { date: "2026-02-13", dayName: "Friday", name: "Evening Run", distance: 4.5, elevation: 0, type: "road", pace: "6:30-7:00/km", completed: true },
+        { date: "2026-02-15", dayName: "Saturday", name: "Afternoon Run", distance: 9.8, elevation: 0, type: "road", pace: "6:30-7:00/km", completed: true }
+      ]
+    },
+    {
+      weekNumber: -2,
+      startDate: "2026-02-16",
+      endDate: "2026-02-22",
+      weeklyKm: 29.46,
+      focus: "Prior Training",
+      runs: [
+        { date: "2026-02-16", dayName: "Monday", name: "Night Run", distance: 4.3, elevation: 0, type: "road", pace: "6:30-7:00/km", completed: true },
+        { date: "2026-02-18", dayName: "Wednesday", name: "Evening Run", distance: 5.7, elevation: 0, type: "road", pace: "6:30-7:00/km", completed: true },
+        { date: "2026-02-20", dayName: "Friday", name: "Afternoon Run", distance: 6, elevation: 0, type: "road", pace: "6:30-7:00/km", completed: true },
+        { date: "2026-02-22", dayName: "Sunday", name: "Morning Trail Run", distance: 13.3, elevation: 0, type: "trail", pace: "7:00-7:30/km", completed: true }
+      ]
+    },
+    {
+      weekNumber: -1,
+      startDate: "2026-02-23",
+      endDate: "2026-03-01",
+      weeklyKm: 30.56,
+      focus: "Prior Training",
+      runs: [
+        { date: "2026-02-23", dayName: "Monday", name: "Evening Run", distance: 6.9, elevation: 0, type: "road", pace: "6:30-7:00/km", completed: true },
+        { date: "2026-02-25", dayName: "Wednesday", name: "Lunch Run", distance: 5.3, elevation: 0, type: "road", pace: "6:30-7:00/km", completed: true },
+        { date: "2026-02-28", dayName: "Saturday", name: "Morning Run", distance: 9, elevation: 0, type: "road", pace: "6:30-7:00/km", completed: true },
+        { date: "2026-03-01", dayName: "Sunday", name: "Evening Run", distance: 9.2, elevation: 0, type: "road", pace: "6:30-7:00/km", completed: true }
+      ]
+    },
+    {
+      weekNumber: 0,
+      startDate: "2026-03-02",
+      endDate: "2026-03-08",
+      weeklyKm: 14.88,
+      focus: "Prior Training",
+      runs: [
+        { date: "2026-03-03", dayName: "Tuesday", name: "Evening Run", distance: 5.9, elevation: 0, type: "road", pace: "6:30-7:00/km", completed: true },
+        { date: "2026-03-05", dayName: "Thursday", name: "Evening Run", distance: 4.9, elevation: 0, type: "road", pace: "6:30-7:00/km", completed: true },
+        { date: "2026-03-08", dayName: "Sunday", name: "Morning Run", distance: 4, elevation: 0, type: "road", pace: "6:30-7:00/km", completed: true }
+      ]
+    },
     {
       weekNumber: 1,
       startDate: "2026-03-10",
@@ -26,6 +90,7 @@ const trainingPlan = {
           pace: "6:30-7:00/km",
           completed: false
         },
+
         {
           date: "2026-03-12",
           dayName: "Wednesday",
