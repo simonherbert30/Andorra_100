@@ -1,0 +1,278 @@
+{
+  "metadata": {
+    "title": "Andorra 80KM Training Guide - Quick Reference",
+    "raceDate": "2026-06-12",
+    "trainingStart": "2026-03-10",
+    "trainingDuration": "14 weeks",
+    "totalPlannedKm": 1200,
+    "totalElevation": 40700,
+    "totalRuns": 68
+  },
+  "weekly_targets": [
+    {
+      "week": 1,
+      "focus": "Base Building",
+      "km": 30,
+      "elevation": 850,
+      "runs": 4,
+      "description": "Establish consistency and aerobic base"
+    },
+    {
+      "week": 2,
+      "focus": "Building Consistency",
+      "km": 35,
+      "elevation": 1050,
+      "runs": 4,
+      "description": "Increase mileage gradually"
+    },
+    {
+      "week": 3,
+      "focus": "Volume Increase",
+      "km": 40,
+      "elevation": 1200,
+      "runs": 4,
+      "description": "Push volume while maintaining quality"
+    },
+    {
+      "week": 4,
+      "focus": "Building Strength",
+      "km": 42,
+      "elevation": 1350,
+      "runs": 4,
+      "description": "Add intensity with hill repeats"
+    },
+    {
+      "week": 5,
+      "focus": "Volume Building Phase",
+      "km": 50,
+      "elevation": 1700,
+      "runs": 4,
+      "description": "Significant volume increase, long runs begin"
+    },
+    {
+      "week": 6,
+      "focus": "Peak Building",
+      "km": 55,
+      "elevation": 1900,
+      "runs": 4,
+      "description": "Approach peak volume"
+    },
+    {
+      "week": 7,
+      "focus": "Peak Week 1",
+      "km": 60,
+      "elevation": 2100,
+      "runs": 4,
+      "description": "PEAK WEEK - highest volume"
+    },
+    {
+      "week": 8,
+      "focus": "Peak Week 2",
+      "km": 65,
+      "elevation": 2200,
+      "runs": 4,
+      "description": "PEAK WEEK - maximum elevation work"
+    },
+    {
+      "week": 9,
+      "focus": "Maintain with Intensity",
+      "km": 60,
+      "elevation": 1950,
+      "runs": 4,
+      "description": "Reduce volume but maintain intensity"
+    },
+    {
+      "week": 10,
+      "focus": "Maintain Volume",
+      "km": 55,
+      "elevation": 1800,
+      "runs": 4,
+      "description": "Solid maintenance week"
+    },
+    {
+      "week": 11,
+      "focus": "Begin Taper",
+      "km": 50,
+      "elevation": 1550,
+      "runs": 4,
+      "description": "Start reducing volume, maintain intensity"
+    },
+    {
+      "week": 12,
+      "focus": "Taper Week",
+      "km": 40,
+      "elevation": 1150,
+      "runs": 4,
+      "description": "Significant volume reduction"
+    },
+    {
+      "week": 13,
+      "focus": "Final Taper",
+      "km": 25,
+      "elevation": 700,
+      "runs": 4,
+      "description": "Minimal volume, focus on freshness"
+    },
+    {
+      "week": 14,
+      "focus": "RACE WEEK",
+      "km": 80,
+      "elevation": 3900,
+      "runs": 3,
+      "description": "RACE DAY - June 12, 2026"
+    }
+  ],
+  "run_types": {
+    "road": {
+      "description": "Urban/road running",
+      "elevation": "minimal",
+      "days": "Monday-Thursday",
+      "focus": "speed work, consistency"
+    },
+    "trail": {
+      "description": "Trail running with elevation",
+      "elevation": "significant",
+      "days": "Friday-Sunday",
+      "focus": "climbing technique, endurance"
+    },
+    "recovery": {
+      "description": "Easy recovery run",
+      "elevation": "minimal to moderate",
+      "days": "Any day",
+      "focus": "active recovery"
+    },
+    "long_run": {
+      "description": "Extended distance run",
+      "elevation": "varies",
+      "days": "Saturday or Sunday",
+      "focus": "aerobic base, mental toughness"
+    }
+  },
+  "pace_guidelines": {
+    "easy_run": "6:30-7:30/km",
+    "tempo_run": "6:00-6:30/km",
+    "threshold_run": "6:15-6:45/km",
+    "long_trail_run": "7:00-7:30/km",
+    "recovery_run": "7:30-8:30/km",
+    "race_target": "10:00-11:00/km"
+  },
+  "monthly_breakdown": {
+    "march": {
+      "weeks_trained": 3,
+      "target_km": 105,
+      "focus": "Base establishment and consistency"
+    },
+    "april": {
+      "weeks_trained": 4,
+      "target_km": 187,
+      "focus": "Volume building and peak preparation"
+    },
+    "may": {
+      "weeks_trained": 4,
+      "target_km": 230,
+      "focus": "Peak volumes and elevation work"
+    },
+    "june": {
+      "weeks_trained": 2,
+      "target_km": 65,
+      "focus": "Taper and race preparation + RACE"
+    }
+  },
+  "nutrition_strategy": {
+    "easy_runs": "Normal breakfast/lunch, hydrate",
+    "long_runs_under_2h": "Water + electrolytes",
+    "long_runs_over_2h": "Energy gels/food every 30-45 min, electrolytes",
+    "recovery": "High protein meal within 30 min of finish",
+    "daily": "Balanced diet, 2g carbs per kg body weight for harder weeks"
+  },
+  "equipment_checklist": {
+    "essential": [
+      "Trail running shoes (tested on multiple runs)",
+      "Quick-dry shirt/shorts",
+      "Running socks (merino or technical)",
+      "Trail running pack (8-10L for long runs)",
+      "Hydration bottles or bladder",
+      "Sun protection (hat/visor)",
+      "Headlamp (for early/late runs)"
+    ],
+    "recommended": [
+      "Compression socks",
+      "Electrolyte supplements",
+      "Energy gels/bars",
+      "Running watch/GPS device",
+      "Fitness tracker for recovery metrics",
+      "Foam roller for recovery",
+      "Trail running gloves (if cool weather)"
+    ]
+  },
+  "injury_prevention": {
+    "key_practices": [
+      "Never increase weekly mileage more than 10%",
+      "Include 1-2 strength training sessions per week",
+      "Core work 3x per week (planks, side planks, dead bugs)",
+      "Foam roll daily (10-15 min)",
+      "Sleep 7-9 hours per night",
+      "Take 1 complete rest day per week",
+      "Address any pain within 24 hours"
+    ],
+    "warning_signs": [
+      "Sharp pain during or after run",
+      "Pain that worsens throughout week",
+      "Inability to complete planned run",
+      "Swelling or visible inflammation",
+      "Persistent limping"
+    ],
+    "action_plan": "If warning signs appear: Rest 2-3 days, gentle yoga/walk only, reassess before returning to running"
+  },
+  "race_week_schedule": {
+    "monday": "Easy 4km run (warm up legs)",
+    "wednesday": "Easy 5km steady run",
+    "thursday": "Easy 3km shakeout",
+    "friday": "Rest or gentle yoga",
+    "saturday": "Rest/carb loading",
+    "sunday": "REST DAY - light walk only",
+    "monday_race_day": "RACE DAY - 80km Trail 100 Andorra"
+  },
+  "race_day_logistics": {
+    "arrive_time": "5:00-5:30 AM",
+    "breakfast": "2-3 hours before race (familiar food, 200-300 calories)",
+    "hydration": "500ml water by 6:00 AM",
+    "warmup": "15-20 min easy jog + dynamic stretches",
+    "pacing_strategy": "Conservative first 10km, find rhythm 10-30km, push 30-60km where terrain allows, final 20km manage effort and fueling"
+  },
+  "post_race_recovery": {
+    "immediate_0_2h": "Active recovery walk, light stretching, refuel with carbs+protein",
+    "day_1": "Complete rest or very easy 20 min walk",
+    "week_1": "Light easy running max 3 days, lots of stretching and foam rolling",
+    "week_2": "Gradually return to normal training, assess any lingering fatigue/soreness",
+    "celebration": "You earned it - enjoy the accomplishment!"
+  },
+  "mental_preparation": {
+    "confidence_building": [
+      "Successfully complete peak training weeks 7-8",
+      "Practice fueling on long runs early",
+      "Visualize race course regularly",
+      "Review your training plan - you've earned this fitness"
+    ],
+    "race_day_mindset": [
+      "Expect tough moments - they pass",
+      "Focus on next checkpoint, not finish line",
+      "Enjoy the experience and scenery",
+      "Your training has prepared you",
+      "Respect the mountain but trust yourself"
+    ]
+  },
+  "estimated_race_completion_times": {
+    "conservative_11min_per_km": "14:40",
+    "moderate_10:30_per_km": "14:00",
+    "faster_10_per_km": "13:20",
+    "very_fast_9:30_per_km": "12:40",
+    "elite_9_per_km": "12:00"
+  },
+  "additional_resources": {
+    "official_race": "https://andorra.utmb.world/",
+    "utmb_world": "https://utmb.world/",
+    "strava": "https://www.strava.com/",
+    "trail_running_tips": "Focus on relaxing on downhills, finding rhythm uphill, consistent pacing"
+  }
+}

@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trail 100 Andorra 80KM - Training Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --utmb-primary: #1a1a1a;
+            --utmb-accent: #00a651;
+            --utmb-light: #f5f5f5;
+            --utmb-border: #e0e0e0;
+            --trail-orange: #ff6b35;
+            --elevation-brown: #8b6f47;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+            color: var(--utmb-primary);
+            line-height: 1.6;
+        }
+
+        /* Header with Progress Bar */
+        .header {
+            background: linear-gradient(135deg, var(--utmb-primary) 0%, #2d2d2d 100%);
+            color: white;
+            padding: 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-bottom: 2px solid var(--utmb-border);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00a651 0%, #00d46a 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+        }
+
+        .progress-bar::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: #00d46a;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 212, 106, 0.5);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--utmb-accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo::before {
+            content: '⛰️';
+            font-size: 32px;
+        }
+
+        .race-info {
+            border-left: 3px solid var(--utmb-accent);
+            padding-left: 20px;
+        }
+
+        .race-info h1 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .race-info p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 40px;
+        }
+
+        .stat {
+            text-align: center;
+            background: rgba(0, 166, 81, 0.1);
+            border-radius: 8px;
+            padding: 15px 25px;
+            border-left: 3px solid var(--utmb-accent);
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--utmb-accent);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 5px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Control Panel */
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-group label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            color: var(--utmb-primary);
+        }
+
+        .control-group input,
+        .control-group select {
+            padding: 10px 15px;
+            border: 2px solid var(--utmb-border);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .control-group input:focus,
+        .control-group select:focus {
+            outline: none;
+            border-color: var(--utmb-accent);
+            box-shadow: 0 0 10px rgba(0, 166, 81, 0.2);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: var(--utmb-accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #009d48;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 166, 81, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: var(--utmb-primary);
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        /* Main Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .card h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--utmb-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--utmb-accent);
+            border-radius: 2px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #f0f9f4 0%, #e8f5f0 100%);
+            border-left: 4px solid var(--utmb-accent);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-box h3 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: rgba(26, 26, 26, 0.7);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .stat-box .value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--utmb-accent);
+        }
+
+        .stat-box .unit {
+            font-size: 12px;
+            color: rgba(26, 26, 26, 0.6);
+            margin-top: 5px;
+        }
+
+        /* Timeline */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid var(--utmb-border);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item.completed {
+            background: #f0f9f4;
+            border-left-color: var(--utmb-accent);
+        }
+
+        .timeline-dot {
+            width: 40px;
+            height: 40px;
+            background: var(--utmb-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .timeline-item.completed .timeline-dot {
+            background: var(--utmb-accent);
+            color: white;
+        }
+
+        .timeline-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .timeline-content h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--utmb-primary);
+        }
+
+        .timeline-content p {
+            font-size: 12px;
+            color: rgba(26, 26, 26, 0.6);
+        }
+
+        /* Training Schedule */
+        .training-schedule {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .week-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid var(--utmb-border);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .week-card:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .week-card.active {
+            border-left-color: var(--utmb-accent);
+            background: linear-gradient(to right, rgba(0, 166, 81, 0.05), white);
+        }
+
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--utmb-border);
+        }
+
+        .week-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .week-badges {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: var(--utmb-primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge.trail {
+            background: var(--trail-orange);
+        }
+
+        .badge.road {
+            background: #3498db;
+        }
+
+        .badge.pace {
+            background: var(--elevation-brown);
+        }
+
+        .runs-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .run-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 15px;
+            align-items: center;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 6px;
+            border: 2px solid var(--utmb-border);
+            transition: all 0.3s ease;
+        }
+
+        .run-item:hover {
+            border-color: var(--utmb-accent);
+            background: #fafbfa;
+        }
+
+        .run-item.completed {
+            background: #f0f9f4;
+            border-color: var(--utmb-accent);
+            opacity: 0.8;
+        }
+
+        .run-checkbox {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            accent-color: var(--utmb-accent);
+        }
+
+        .run-details h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--utmb-primary);
+            margin-bottom: 3px;
+        }
+
+        .run-info {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: rgba(26, 26, 26, 0.6);
+        }
+
+        .run-info span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .run-type {
+            background: var(--utmb-accent);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .run-item.completed .run-type {
+            background: var(--utmb-primary);
+        }
+
+        /* Full Schedule View */
+        .full-schedule {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .schedule-table thead {
+            background: var(--utmb-primary);
+            color: white;
+        }
+
+        .schedule-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .schedule-table td {
+            padding: 12px 15px;
+            border-top: 1px solid var(--utmb-border);
+            font-size: 13px;
+        }
+
+        .schedule-table tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        .date-cell {
+            font-weight: 600;
+            color: var(--utmb-primary);
+        }
+
+        .distance-cell {
+            text-align: center;
+            font-weight: 600;
+            color: var(--trail-orange);
+        }
+
+        .elevation-cell {
+            text-align: center;
+            color: var(--elevation-brown);
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        /* Strava Integration */
+        .strava-section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .strava-section h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: var(--utmb-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .strava-status {
+            padding: 15px;
+            border-radius: 8px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #856404;
+        }
+
+        .strava-status.connected {
+            background: #d4edda;
+            border-left-color: var(--utmb-accent);
+            color: #155724;
+        }
+
+        .strava-button {
+            background: #fc4c02;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .strava-button:hover {
+            background: #e63a00;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(252, 76, 2, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--utmb-primary);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 50px;
+            font-size: 13px;
+        }
+
+        footer p {
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--utmb-accent);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .header-stats {
+                flex-direction: column;
+                gap: 15px;
+                width: 100%;
+            }
+
+            .stat {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 20px 15px;
+            }
+
+            .logo {
+                font-size: 22px;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .schedule-table {
+                font-size: 12px;
+            }
+
+            .schedule-table th,
+            .schedule-table td {
+                padding: 10px;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card, .week-card {
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        .card:nth-child(n) {
+            animation-delay: 0.1s;
+        }
+
+        /* Print Styles */
+        @media print {
+            .controls, .strava-section {
+                display: none;
+            }
+
+            .card, .week-card {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Progress Bar -->
+    <div class="header">
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+        </div>
+        
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo">TRAIL 100 ANDORRA</div>
+                <div class="race-info">
+                    <h1>80KM Trail Run</h1>
+                    <p>June 12, 2026 • 3900m elevation</p>
+                </div>
+            </div>
+            
+            <div class="header-stats">
+                <div class="stat">
+                    <span class="stat-number" id="daysUntilRace">97</span>
+                    <span class="stat-label">Days Until Race</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" id="runsUntilRace">68</span>
+                    <span class="stat-label">Runs Until Race</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" id="completedRuns">0</span>
+                    <span class="stat-label">Runs Completed</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Controls Panel -->
+        <div class="controls">
+            <div class="control-group">
+                <label>Filter by Week</label>
+                <select id="weekFilter">
+                    <option value="">All Weeks</option>
+                    <option value="1">Week 1: Base Building</option>
+                    <option value="2">Week 2: Building Consistency</option>
+                    <option value="3">Week 3: Volume Increase</option>
+                    <option value="4">Week 4: Building Strength</option>
+                    <option value="5">Week 5: Volume Building</option>
+                    <option value="6">Week 6: Peak Building</option>
+                    <option value="7">Week 7: Peak Week 1</option>
+                    <option value="8">Week 8: Peak Week 2</option>
+                    <option value="9">Week 9: Maintain Intensity</option>
+                    <option value="10">Week 10: Maintain Volume</option>
+                    <option value="11">Week 11: Begin Taper</option>
+                    <option value="12">Week 12: Taper Week</option>
+                    <option value="13">Week 13: Final Taper</option>
+                    <option value="14">Week 14: RACE WEEK</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Filter by Type</label>
+                <select id="typeFilter">
+                    <option value="">All Types</option>
+                    <option value="trail">Trail Runs</option>
+                    <option value="road">Road Runs</option>
+                    <option value="race">Race</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Filter by Status</label>
+                <select id="statusFilter">
+                    <option value="">All Runs</option>
+                    <option value="completed">Completed</option>
+                    <option value="pending">Pending</option>
+                </select>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn" onclick="exportPlan()">📥 Export Plan</button>
+                <button class="btn btn-secondary" onclick="resetAll()">🔄 Reset All</button>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="content-grid">
+            <!-- Overview Card -->
+            <div class="card">
+                <h2>📊 Training Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <h3>Total Training Km</h3>
+                        <span class="value" id="totalKm">0</span>
+                        <span class="unit">km</span>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Total Elevation</h3>
+                        <span class="value" id="totalElevation">0</span>
+                        <span class="unit">m+</span>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Total Runs</h3>
+                        <span class="value" id="totalRuns">0</span>
+                        <span class="unit">sessions</span>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Avg Weekly Km</h3>
+                        <span class="value" id="avgWeeklyKm">0</span>
+                        <span class="unit">km/week</span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 25px; padding-top: 25px; border-top: 2px solid var(--utmb-border);">
+                    <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px;">Progress This Training Block</h3>
+                    <div class="timeline" id="progressTimeline">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="card">
+                <h2>🎯 Quick Stats</h2>
+                <div style="padding: 20px 0;">
+                    <div style="margin-bottom: 25px;">
+                        <h3 style="font-size: 13px; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(26, 26, 26, 0.7);">Completed vs Planned</h3>
+                        <div style="display: flex; gap: 20px; align-items: center;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 28px; font-weight: 800; color: var(--utmb-accent);" id="completedKmQuick">0</div>
+                                <div style="font-size: 11px; color: rgba(26, 26, 26, 0.6); margin-top: 5px;">km Completed</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 28px; font-weight: 800; color: var(--trail-orange);" id="remainingKmQuick">1200</div>
+                                <div style="font-size: 11px; color: rgba(26, 26, 26, 0.6); margin-top: 5px;">km Remaining</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="border-top: 2px solid var(--utmb-border); padding-top: 25px;">
+                        <h3 style="font-size: 13px; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(26, 26, 26, 0.7);">Upcoming Runs (Next 7 Days)</h3>
+                        <div id="upcomingRuns" style="display: flex; flex-direction: column; gap: 10px;">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Strava Integration Section -->
+        <div class="strava-section">
+            <h2>🎗️ Connect Strava</h2>
+            <div class="strava-status" id="stravaStatus">
+                Not connected to Strava. Connect to automatically sync your runs.
+            </div>
+            <p style="margin-bottom: 15px; font-size: 13px; color: rgba(26, 26, 26, 0.7);">
+                By connecting Strava, your completed runs will automatically sync with your training plan, helping you track your progress toward the Andorra 80KM race.
+            </p>
+            <button class="strava-button" onclick="connectStrava()">🔗 Connect Strava Account</button>
+        </div>
+
+        <!-- Training Schedule Section -->
+        <div class="card" style="margin-bottom: 40px;">
+            <h2>📅 Training Schedule</h2>
+            
+            <!-- View Toggle -->
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button class="btn" style="flex: 0;" onclick="switchView('weeks')" id="viewWeeks">Weekly View</button>
+                <button class="btn btn-secondary" style="flex: 0;" onclick="switchView('table')" id="viewTable">Table View</button>
+            </div>
+
+            <!-- Weekly View -->
+            <div id="weeklyView" class="training-schedule">
+                <!-- Populated by JavaScript -->
+            </div>
+
+            <!-- Table View -->
+            <div id="tableView" style="display: none;">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Day</th>
+                            <th>Run Name</th>
+                            <th>Distance</th>
+                            <th>Elevation</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scheduleTableBody">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>🏔️ Trail 100 Andorra by UTMB® Training Dashboard © 2026</p>
+        <p>Prepared with 🏃 by Simon - Ready to conquer the Pyrenees on June 12, 2026</p>
+        <div class="footer-links">
+            <a href="https://andorra.utmb.world/" target="_blank">Official Race Website</a>
+            <a href="https://www.strava.com/" target="_blank">Strava</a>
+            <a href="https://utmb.world/" target="_blank">UTMB World</a>
+        </div>
+    </footer>
+
+    <!-- Training Plan Data -->
+    <script src="training_plan.js"></script>
+
+    <script>
+        // Initialize dashboard
+        function initDashboard() {
+            updateStats();
+            updateProgressBar();
+            renderWeeklyView();
+            renderTableView();
+            updateCountdowns();
+            renderProgressTimeline();
+            updateUpcomingRuns();
+        }
+
+        // Update all statistics
+        function updateStats() {
+            const totals = calculateTotals();
+            const completed = getCompletedKm();
+            const completedRuns = getCompletedRunsCount();
+            
+            document.getElementById('totalKm').textContent = totals.totalKm.toFixed(0);
+            document.getElementById('totalElevation').textContent = totals.totalElevation.toLocaleString();
+            document.getElementById('totalRuns').textContent = totals.totalRuns;
+            document.getElementById('avgWeeklyKm').textContent = (totals.totalKm / 14).toFixed(1);
+            
+            document.getElementById('completedKmQuick').textContent = completed.toFixed(0);
+            document.getElementById('remainingKmQuick').textContent = (totals.totalKm - completed).toFixed(0);
+            document.getElementById('completedRuns').textContent = completedRuns;
+        }
+
+        // Update progress bar
+        function updateProgressBar() {
+            const completed = getCompletedKm();
+            const race = trainingPlan.raceDistance;
+            const total = calculateTotals().totalKm;
+            
+            // Progress from training + race completion
+            const totalWithRace = total + race;
+            const progressPercentage = (completed / totalWithRace) * 100;
+            
+            document.getElementById('progressBar').style.width = Math.min(progressPercentage, 100) + '%';
+        }
+
+        // Update countdown timers
+        function updateCountdowns() {
+            const now = new Date(2026, 2, 7); // March 7, 2026
+            const raceDate = new Date(2026, 5, 12); // June 12, 2026
+            
+            const daysUntil = Math.ceil((raceDate - now) / (1000 * 60 * 60 * 24));
+            const runsUntilRace = calculateTotals().totalRuns - getCompletedRunsCount();
+            
+            document.getElementById('daysUntilRace').textContent = daysUntil;
+            document.getElementById('runsUntilRace').textContent = runsUntilRace;
+        }
+
+        // Render weekly view
+        function renderWeeklyView() {
+            const container = document.getElementById('weeklyView');
+            const weekFilter = document.getElementById('weekFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            
+            container.innerHTML = '';
+            
+            trainingPlan.weeks.forEach(week => {
+                if (weekFilter && String(week.weekNumber) !== weekFilter) return;
+                
+                const isCurrentWeek = isWeekActive(week);
+                const weekCard = document.createElement('div');
+                weekCard.className = `week-card ${isCurrentWeek ? 'active' : ''}`;
+                
+                let runsHtml = '';
+                let weekKm = 0;
+                let weekElevation = 0;
+                let runsCount = 0;
+                
+                week.runs.forEach(run => {
+                    if (typeFilter && run.type !== typeFilter) return;
+                    if (statusFilter === 'completed' && !run.completed) return;
+                    if (statusFilter === 'pending' && run.completed) return;
+                    
+                    const isCompleted = run.completed;
+                    const icon = isCompleted ? '✓' : '○';
+                    
+                    if (run.type !== 'rest') {
+                        weekKm += run.distance;
+                        weekElevation += run.elevation;
+                        runsCount++;
+                    }
+                    
+                    runsHtml += `
+                        <div class="run-item ${isCompleted ? 'completed' : ''}">
+                            <input type="checkbox" class="run-checkbox" ${isCompleted ? 'checked' : ''} onchange="toggleRun('${run.date}')">
+                            <div class="run-details">
+                                <h4>${run.dayName}, ${formatDate(run.date)}</h4>
+                                <h4 style="font-weight: 700; color: var(--utmb-primary); margin-top: 5px;">${run.name}</h4>
+                                <div class="run-info">
+                                    <span>📍 ${run.distance}km</span>
+                                    <span>⬆️ ${run.elevation}m</span>
+                                    <span>🐢 ${run.pace}</span>
+                                </div>
+                            </div>
+                            <span class="run-type">${run.type.toUpperCase()}</span>
+                        </div>
+                    `;
+                });
+                
+                weekCard.innerHTML = `
+                    <div class="week-header">
+                        <div>
+                            <h3>Week ${week.weekNumber}: ${week.focus}</h3>
+                            <p style="font-size: 12px; color: rgba(26, 26, 26, 0.6); margin-top: 5px;">${week.startDate} to ${week.endDate}</p>
+                        </div>
+                        <div class="week-badges">
+                            <span class="badge">${week.weeklyKm}km</span>
+                            <span class="badge pace">⬆️ ${week.runs.reduce((sum, r) => sum + r.elevation, 0)}m</span>
+                        </div>
+                    </div>
+                    <div class="runs-list">
+                        ${runsHtml}
+                    </div>
+                `;
+                
+                container.appendChild(weekCard);
+            });
+        }
+
+        // Render table view
+        function renderTableView() {
+            const tbody = document.getElementById('scheduleTableBody');
+            const allRuns = getAllRuns();
+            const weekFilter = document.getElementById('weekFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            
+            tbody.innerHTML = '';
+            
+            allRuns.forEach(run => {
+                if (weekFilter && String(run.weekNumber) !== weekFilter) return;
+                if (typeFilter && run.type !== typeFilter) return;
+                if (statusFilter === 'completed' && !run.completed) return;
+                if (statusFilter === 'pending' && run.completed) return;
+                
+                const row = document.createElement('tr');
+                const statusClass = run.completed ? 'status-completed' : 'status-pending';
+                const statusText = run.completed ? 'Completed' : 'Pending';
+                
+                row.innerHTML = `
+                    <td class="date-cell">${run.date}</td>
+                    <td>${run.dayName}</td>
+                    <td>${run.name}</td>
+                    <td class="distance-cell">${run.distance}km</td>
+                    <td class="elevation-cell">${run.elevation}m</td>
+                    <td><span class="badge">${run.type.toUpperCase()}</span></td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Toggle run completion
+        function toggleRun(date) {
+            completeRun(date);
+            updateStats();
+            updateProgressBar();
+            updateCountdowns();
+            renderWeeklyView();
+            renderTableView();
+            renderProgressTimeline();
+            updateUpcomingRuns();
+        }
+
+        // Render progress timeline
+        function renderProgressTimeline() {
+            const container = document.getElementById('progressTimeline');
+            const now = new Date(2026, 2, 7);
+            const nextSevenDays = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+            
+            let html = '';
+            
+            getAllRuns()
+                .filter(r => r.type !== 'rest' && new Date(r.date) >= now && new Date(r.date) <= nextSevenDays)
+                .slice(0, 5)
+                .forEach(run => {
+                    const icon = run.completed ? '✓' : run.type === 'trail' ? '⛰️' : '🏃';
+                    html += `
+                        <div class="timeline-item ${run.completed ? 'completed' : ''}">
+                            <div class="timeline-dot">${icon}</div>
+                            <div class="timeline-content">
+                                <h3>${run.name}</h3>
+                                <p>${run.dayName}, ${formatDate(run.date)} • ${run.distance}km • ${run.elevation}m elevation</p>
+                            </div>
+                        </div>
+                    `;
+                });
+            
+            if (html === '') {
+                html = '<div style="padding: 20px; text-align: center; color: rgba(26, 26, 26, 0.5);">No runs in the next 7 days</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // Update upcoming runs
+        function updateUpcomingRuns() {
+            const container = document.getElementById('upcomingRuns');
+            const now = new Date(2026, 2, 7);
+            const nextSevenDays = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+            
+            let html = '';
+            
+            getAllRuns()
+                .filter(r => r.type !== 'rest' && new Date(r.date) >= now && new Date(r.date) <= nextSevenDays)
+                .forEach(run => {
+                    html += `
+                        <div style="padding: 10px; background: #f9f9f9; border-radius: 6px; border-left: 3px solid var(--utmb-accent); font-size: 12px;">
+                            <div style="font-weight: 600; color: var(--utmb-primary);">${run.dayName}: ${run.distance}km</div>
+                            <div style="color: rgba(26, 26, 26, 0.6); margin-top: 3px;">${run.name}</div>
+                        </div>
+                    `;
+                });
+            
+            if (html === '') {
+                html = '<div style="padding: 10px; color: rgba(26, 26, 26, 0.5);">No upcoming runs</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // Check if week is current/active
+        function isWeekActive(week) {
+            const now = new Date(2026, 2, 7);
+            const startDate = new Date(week.startDate);
+            const endDate = new Date(week.endDate);
+            
+            return now >= startDate && now <= endDate;
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        // Switch between views
+        function switchView(view) {
+            const weeklyView = document.getElementById('weeklyView');
+            const tableView = document.getElementById('tableView');
+            const viewWeeksBtn = document.getElementById('viewWeeks');
+            const viewTableBtn = document.getElementById('viewTable');
+            
+            if (view === 'weeks') {
+                weeklyView.style.display = 'flex';
+                tableView.style.display = 'none';
+                viewWeeksBtn.style.background = 'var(--utmb-accent)';
+                viewTableBtn.style.background = '#f0f0f0';
+            } else {
+                weeklyView.style.display = 'none';
+                tableView.style.display = 'block';
+                viewWeeksBtn.style.background = '#f0f0f0';
+                viewTableBtn.style.background = 'var(--utmb-accent)';
+            }
+        }
+
+        // Filter handling
+        document.getElementById('weekFilter').addEventListener('change', () => {
+            renderWeeklyView();
+            renderTableView();
+        });
+
+        document.getElementById('typeFilter').addEventListener('change', () => {
+            renderWeeklyView();
+            renderTableView();
+        });
+
+        document.getElementById('statusFilter').addEventListener('change', () => {
+            renderWeeklyView();
+            renderTableView();
+        });
+
+        // Export plan
+        function exportPlan() {
+            const data = {
+                raceName: trainingPlan.raceName,
+                raceDate: trainingPlan.raceDate,
+                raceDistance: trainingPlan.raceDistance,
+                raceElevation: trainingPlan.raceElevation,
+                trainingPlan: trainingPlan.weeks,
+                exportDate: new Date().toISOString(),
+                completedRuns: getCompletedRunsCount(),
+                completedKm: getCompletedKm()
+            };
+            
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `andorra_training_plan_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Reset all
+        function resetAll() {
+            if (confirm('Are you sure you want to reset all completed runs? This cannot be undone.')) {
+                trainingPlan.weeks.forEach(week => {
+                    week.runs.forEach(run => {
+                        run.completed = false;
+                    });
+                });
+                
+                updateStats();
+                updateProgressBar();
+                updateCountdowns();
+                renderWeeklyView();
+                renderTableView();
+                renderProgressTimeline();
+                updateUpcomingRuns();
+            }
+        }
+
+        // Connect to Strava (placeholder)
+        function connectStrava() {
+            alert('Strava integration coming soon! For now, you can manually mark your runs as completed in the training schedule.');
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>

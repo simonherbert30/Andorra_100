@@ -1,0 +1,31 @@
+{
+  "name": "andorra-80km-training",
+  "version": "1.0.0",
+  "description": "Interactive training dashboard for Andorra 80KM Trail Race by UTMB - 14 week comprehensive training plan",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "trail-running",
+    "utmb",
+    "andorra",
+    "training",
+    "fitness",
+    "running-plan"
+  ],
+  "author": "Simon Herbert",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": "18.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/simonherbert30/Andorra_100.git"
+  }
+}
