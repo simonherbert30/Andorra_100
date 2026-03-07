@@ -15,6 +15,13 @@ Your training is scheduled from **March 10, 2026** to **June 12, 2026** (14 week
    - Strategic taper in final weeks
    - Max 4 runs per week as requested
 
+2. **High-End Interface**
+   - Elegant Poppins typography and refined color palette
+   - Redesigned progress bar placed below header with premium styling
+   - Union of translucency and shadows for cards, giving a luxurious feel
+   - Weekly range shown Monday–Sunday automatically
+   - New Overview tab for quick weekly summaries
+
 2. **Smart Run Distribution**
    - **Trail/Elevation Runs**: Friday-Sunday only (access to trails and hills)
    - **Road Runs**: Monday-Thursday (city access, easy/tempo based)
