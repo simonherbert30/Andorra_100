@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trail 100 Andorra 80KM - Training Dashboard</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
+
         * {
             margin: 0;
             padding: 0;
@@ -18,13 +20,15 @@
             --utmb-border: #e0e0e0;
             --trail-orange: #ff6b35;
             --elevation-brown: #8b6f47;
+            --font-sans: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, #f2f2f2 0%, #ffffff 100%);
             color: var(--utmb-primary);
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
         /* Header with Progress Bar */
@@ -40,20 +44,20 @@
 
         .progress-container {
             width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-bottom: 2px solid var(--utmb-border);
+            height: 14px;
+            background: #ddd;
+            border-radius: 7px;
+            margin-top: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
         }
 
         .progress-bar {
             height: 100%;
             background: linear-gradient(90deg, #00a651 0%, #00d46a 100%);
             width: 0%;
-            transition: width 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 10px;
+            transition: width 0.5s ease;
+            border-radius: 7px 0 0 7px;
         }
 
         .progress-bar::after {
@@ -236,10 +240,12 @@
         }
 
         .card {
-            background: white;
-            border-radius: 10px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
             padding: 25px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(5px);
+            border-left: 4px solid var(--utmb-accent);
         }
 
         .card h2 {
@@ -742,10 +748,6 @@
 <body>
     <!-- Header with Progress Bar -->
     <div class="header">
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
-        </div>
-        
         <div class="header-content">
             <div class="header-left">
                 <div class="logo">TRAIL 100 ANDORRA</div>
@@ -771,6 +773,10 @@
             </div>
         </div>
     </div>
+
+    <!-- redesigned progress bar placed below header -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar" style="width: 0%"></div>
 
     <!-- Main Container -->
     <div class="container">
@@ -904,8 +910,9 @@
             
             <!-- View Toggle -->
             <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                <button class="btn" style="flex: 0;" onclick="switchView('weeks')" id="viewWeeks">Weekly View</button>
-                <button class="btn btn-secondary" style="flex: 0;" onclick="switchView('table')" id="viewTable">Table View</button>
+                <button class="btn" style="flex: 0;" onclick="switchView('weeks')" id="viewWeeks">Schedule</button>
+                <button class="btn btn-secondary" style="flex: 0;" onclick="switchView('table')" id="viewTable">Table</button>
+                <button class="btn btn-secondary" style="flex: 0;" onclick="switchView('overview')" id="viewOverview">Overview</button>
             </div>
 
             <!-- Weekly View -->
@@ -932,6 +939,25 @@
                     </tbody>
                 </table>
             </div>
+            <!-- Overview View -->
+            <div id="overviewView" style="display: none;">
+                <h3 style="font-size:16px; font-weight:700; margin-bottom:15px;">Weekly Overview</h3>
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Week</th>
+                            <th>Focus</th>
+                            <th>Km</th>
+                            <th>Elevation</th>
+                            <th>Runs</th>
+                            <th>Completed</th>
+                        </tr>
+                    </thead>
+                    <tbody id="overviewTableBody">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -952,10 +978,21 @@
     <script>
         // Initialize dashboard
         function initDashboard() {
+            // mark any runs that occurred before 'today' as completed (png runs)
+            const now = new Date(2026, 2, 7);
+            trainingPlan.weeks.forEach(week => {
+                week.runs.forEach(run => {
+                    if (run.type !== 'rest' && new Date(run.date) <= now) {
+                        run.completed = true;
+                    }
+                });
+            });
+
             updateStats();
             updateProgressBar();
             renderWeeklyView();
             renderTableView();
+            renderOverview();
             updateCountdowns();
             renderProgressTimeline();
             updateUpcomingRuns();
@@ -1002,6 +1039,19 @@
             document.getElementById('runsUntilRace').textContent = runsUntilRace;
         }
 
+        // compute week range based on Monday-Sunday
+        function weekRange(week) {
+            const dates = week.runs.map(r => new Date(r.date));
+            const minDate = new Date(Math.min(...dates));
+            let day = minDate.getDay(); // 0=Sun,1=Mon
+            let diffToMon = (day === 0 ? -6 : 1 - day);
+            const monday = new Date(minDate);
+            monday.setDate(monday.getDate() + diffToMon);
+            const sunday = new Date(monday);
+            sunday.setDate(sunday.getDate() + 6);
+            return { monday, sunday };
+        }
+
         // Render weekly view
         function renderWeeklyView() {
             const container = document.getElementById('weeklyView');
@@ -1031,6 +1081,9 @@
                     const isCompleted = run.completed;
                     const icon = isCompleted ? '✓' : '○';
                     
+                    let runDate = new Date(run.date);
+                    let dayName = runDate.toLocaleDateString('en-US',{weekday:'long'});
+                    
                     if (run.type !== 'rest') {
                         weekKm += run.distance;
                         weekElevation += run.elevation;
@@ -1041,7 +1094,7 @@
                         <div class="run-item ${isCompleted ? 'completed' : ''}">
                             <input type="checkbox" class="run-checkbox" ${isCompleted ? 'checked' : ''} onchange="toggleRun('${run.date}')">
                             <div class="run-details">
-                                <h4>${run.dayName}, ${formatDate(run.date)}</h4>
+                                <h4>${dayName}, ${formatDate(run.date)}</h4>
                                 <h4 style="font-weight: 700; color: var(--utmb-primary); margin-top: 5px;">${run.name}</h4>
                                 <div class="run-info">
                                     <span>📍 ${run.distance}km</span>
@@ -1054,11 +1107,15 @@
                     `;
                 });
                 
+                const range = weekRange(week);
+                const startStr = range.monday.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+                const endStr = range.sunday.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+
                 weekCard.innerHTML = `
                     <div class="week-header">
                         <div>
                             <h3>Week ${week.weekNumber}: ${week.focus}</h3>
-                            <p style="font-size: 12px; color: rgba(26, 26, 26, 0.6); margin-top: 5px;">${week.startDate} to ${week.endDate}</p>
+                            <p style="font-size: 12px; color: rgba(26, 26, 26, 0.6); margin-top: 5px;">${startStr} to ${endStr}</p>
                         </div>
                         <div class="week-badges">
                             <span class="badge">${week.weeklyKm}km</span>
@@ -1094,9 +1151,10 @@
                 const statusClass = run.completed ? 'status-completed' : 'status-pending';
                 const statusText = run.completed ? 'Completed' : 'Pending';
                 
+                const dayName = new Date(run.date).toLocaleDateString('en-US',{weekday:'long'});
                 row.innerHTML = `
                     <td class="date-cell">${run.date}</td>
-                    <td>${run.dayName}</td>
+                    <td>${dayName}</td>
                     <td>${run.name}</td>
                     <td class="distance-cell">${run.distance}km</td>
                     <td class="elevation-cell">${run.elevation}m</td>
@@ -1164,7 +1222,7 @@
                 .forEach(run => {
                     html += `
                         <div style="padding: 10px; background: #f9f9f9; border-radius: 6px; border-left: 3px solid var(--utmb-accent); font-size: 12px;">
-                            <div style="font-weight: 600; color: var(--utmb-primary);">${run.dayName}: ${run.distance}km</div>
+                            <div style="font-weight: 600; color: var(--utmb-primary);">${new Date(run.date).toLocaleDateString('en-US',{weekday:'long'})}: ${run.distance}km</div>
                             <div style="color: rgba(26, 26, 26, 0.6); margin-top: 3px;">${run.name}</div>
                         </div>
                     `;
@@ -1177,13 +1235,11 @@
             container.innerHTML = html;
         }
 
-        // Check if week is current/active
+        // Check if week is current/active (based on Monday-Sunday range)
         function isWeekActive(week) {
             const now = new Date(2026, 2, 7);
-            const startDate = new Date(week.startDate);
-            const endDate = new Date(week.endDate);
-            
-            return now >= startDate && now <= endDate;
+            const range = weekRange(week);
+            return now >= range.monday && now <= range.sunday;
         }
 
         // Format date
@@ -1196,20 +1252,50 @@
         function switchView(view) {
             const weeklyView = document.getElementById('weeklyView');
             const tableView = document.getElementById('tableView');
+            const overviewView = document.getElementById('overviewView');
             const viewWeeksBtn = document.getElementById('viewWeeks');
             const viewTableBtn = document.getElementById('viewTable');
+            const viewOverviewBtn = document.getElementById('viewOverview');
+            
+            // reset all
+            weeklyView.style.display = 'none';
+            tableView.style.display = 'none';
+            overviewView.style.display = 'none';
+            viewWeeksBtn.style.background = '#f0f0f0';
+            viewTableBtn.style.background = '#f0f0f0';
+            viewOverviewBtn.style.background = '#f0f0f0';
             
             if (view === 'weeks') {
                 weeklyView.style.display = 'flex';
-                tableView.style.display = 'none';
                 viewWeeksBtn.style.background = 'var(--utmb-accent)';
-                viewTableBtn.style.background = '#f0f0f0';
-            } else {
-                weeklyView.style.display = 'none';
+            } else if (view === 'table') {
                 tableView.style.display = 'block';
-                viewWeeksBtn.style.background = '#f0f0f0';
                 viewTableBtn.style.background = 'var(--utmb-accent)';
+            } else if (view === 'overview') {
+                overviewView.style.display = 'block';
+                viewOverviewBtn.style.background = 'var(--utmb-accent)';
+                renderOverview();
             }
+        }
+
+        // Render overview table
+        function renderOverview() {
+            const tbody = document.getElementById('overviewTableBody');
+            tbody.innerHTML = '';
+            trainingPlan.weeks.forEach(week => {
+                const totalRuns = week.runs.filter(r => r.type !== 'rest').length;
+                const completedRuns = week.runs.filter(r => r.completed && r.type !== 'rest').length;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${week.weekNumber}</td>
+                    <td>${week.focus}</td>
+                    <td>${week.weeklyKm}</td>
+                    <td>${week.runs.reduce((sum,r)=> sum+r.elevation,0)}</td>
+                    <td>${totalRuns}</td>
+                    <td>${completedRuns}</td>
+                `;
+                tbody.appendChild(row);
+            });
         }
 
         // Filter handling
