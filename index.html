@@ -903,7 +903,6 @@
             renderWeeklyView();
             renderWeeklyOverviewTiles();
             updateCountdowns();
-            updateUpcomingRuns();
         }
 
         // Update all statistics
@@ -963,52 +962,41 @@
         // Render weekly view
         function renderWeeklyView() {
             const container = document.getElementById('weeklyView');
-            const weekFilter = document.getElementById('weekFilter').value;
-            const typeFilter = document.getElementById('typeFilter').value;
-            const statusFilter = document.getElementById('statusFilter').value;
+            if (!container) return;
             
             container.innerHTML = '';
             
             trainingPlan.weeks.forEach(week => {
-                if (weekFilter && String(week.weekNumber) !== weekFilter) return;
-                
                 const isCurrentWeek = isWeekActive(week);
                 const weekCard = document.createElement('div');
                 weekCard.className = `week-card ${isCurrentWeek ? 'active' : ''}`;
                 
                 let runsHtml = '';
-                let weekKm = 0;
-                let weekElevation = 0;
-                let runsCount = 0;
                 
                 week.runs.forEach(run => {
-                    if (typeFilter && run.type !== typeFilter) return;
-                    if (statusFilter === 'completed' && !run.completed) return;
-                    if (statusFilter === 'pending' && run.completed) return;
+                    if (run.type === 'rest') return;
                     
                     const isCompleted = run.completed;
-                    const icon = isCompleted ? '✓' : '○';
-                    
                     let runDate = new Date(run.date);
                     let dayName = runDate.toLocaleDateString('en-US',{weekday:'long'});
                     
-                    if (run.type !== 'rest') {
-                        weekKm += run.distance;
-                        weekElevation += run.elevation;
-                        runsCount++;
-                    }
+                    const detailsExtra = run.details && run.location ? 
+                        `<div class="run-details-extra"><strong>${run.details}</strong><br /> 📍 ${run.location}</div>` 
+                        : '';
                     
                     runsHtml += `
                         <div class="run-item ${isCompleted ? 'completed' : ''}">
-                            <input type="checkbox" class="run-checkbox" ${isCompleted ? 'checked' : ''} onchange="toggleRun('${run.date}')">
+                            <input type="checkbox" class="run-checkbox" ${isCompleted ? 'checked' : ''} onchange="handleToggleRun('${run.date}')">
                             <div class="run-details">
                                 <h4>${dayName}, ${formatDate(run.date)}</h4>
+                                <div class="run-details-type">${run.type.toUpperCase()}</div>
                                 <h4 style="font-weight: 700; color: var(--utmb-primary); margin-top: 5px;">${run.name}</h4>
                                 <div class="run-info">
                                     <span>📍 ${run.distance}km</span>
                                     <span>⬆️ ${run.elevation}m</span>
-                                    <span>🐢 ${run.pace}</span>
+                                    <span>⏱️ ${run.pace}</span>
                                 </div>
+                                ${detailsExtra}
                             </div>
                             <span class="run-type">${run.type.toUpperCase()}</span>
                         </div>
@@ -1027,7 +1015,7 @@
                         </div>
                         <div class="week-badges">
                             <span class="badge">${week.weeklyKm}km</span>
-                            <span class="badge pace">⬆️ ${week.runs.reduce((sum, r) => sum + r.elevation, 0)}m</span>
+                            <span class="badge pace">⬆️ ${week.elevation}m</span>
                         </div>
                     </div>
                     <div class="runs-list">
@@ -1037,108 +1025,6 @@
                 
                 container.appendChild(weekCard);
             });
-        }
-
-        // Render table view
-        function renderTableView() {
-            const tbody = document.getElementById('scheduleTableBody');
-            const allRuns = getAllRuns();
-            const weekFilter = document.getElementById('weekFilter').value;
-            const typeFilter = document.getElementById('typeFilter').value;
-            const statusFilter = document.getElementById('statusFilter').value;
-            
-            tbody.innerHTML = '';
-            
-            allRuns.forEach(run => {
-                if (weekFilter && String(run.weekNumber) !== weekFilter) return;
-                if (typeFilter && run.type !== typeFilter) return;
-                if (statusFilter === 'completed' && !run.completed) return;
-                if (statusFilter === 'pending' && run.completed) return;
-                
-                const row = document.createElement('tr');
-                const statusClass = run.completed ? 'status-completed' : 'status-pending';
-                const statusText = run.completed ? 'Completed' : 'Pending';
-                
-                const dayName = new Date(run.date).toLocaleDateString('en-US',{weekday:'long'});
-                row.innerHTML = `
-                    <td class="date-cell">${run.date}</td>
-                    <td>${dayName}</td>
-                    <td>${run.name}</td>
-                    <td class="distance-cell">${run.distance}km</td>
-                    <td class="elevation-cell">${run.elevation}m</td>
-                    <td><span class="badge">${run.type.toUpperCase()}</span></td>
-                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                `;
-                
-                tbody.appendChild(row);
-            });
-        }
-
-        // Toggle run completion
-        function toggleRun(date) {
-            window.toggleRun(date);  // Calls the toggleRun from training_plan.js which saves to localStorage
-            updateStats();
-            updateProgressBar();
-            updateCountdowns();
-            renderWeeklyView();
-            renderWeeklyOverviewTiles();
-        }
-
-        // Render progress timeline
-        function renderProgressTimeline() {
-            const container = document.getElementById('progressTimeline');
-            const now = new Date(2026, 2, 7);
-            const nextSevenDays = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-            
-            let html = '';
-            
-            getAllRuns()
-                .filter(r => r.type !== 'rest' && new Date(r.date) >= now && new Date(r.date) <= nextSevenDays)
-                .slice(0, 5)
-                .forEach(run => {
-                    const icon = run.completed ? '✓' : run.type === 'trail' ? '⛰️' : '🏃';
-                    html += `
-                        <div class="timeline-item ${run.completed ? 'completed' : ''}">
-                            <div class="timeline-dot">${icon}</div>
-                            <div class="timeline-content">
-                                <h3>${run.name}</h3>
-                                <p>${run.dayName}, ${formatDate(run.date)} • ${run.distance}km • ${run.elevation}m elevation</p>
-                            </div>
-                        </div>
-                    `;
-                });
-            
-            if (html === '') {
-                html = '<div style="padding: 20px; text-align: center; color: rgba(26, 26, 26, 0.5);">No runs in the next 7 days</div>';
-            }
-            
-            container.innerHTML = html;
-        }
-
-        // Update upcoming runs
-        function updateUpcomingRuns() {
-            const container = document.getElementById('upcomingRuns');
-            const now = new Date(2026, 2, 7);
-            const nextSevenDays = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-            
-            let html = '';
-            
-            getAllRuns()
-                .filter(r => r.type !== 'rest' && new Date(r.date) >= now && new Date(r.date) <= nextSevenDays)
-                .forEach(run => {
-                    html += `
-                        <div style="padding: 10px; background: #f9f9f9; border-radius: 6px; border-left: 3px solid var(--utmb-accent); font-size: 12px;">
-                            <div style="font-weight: 600; color: var(--utmb-primary);">${new Date(run.date).toLocaleDateString('en-US',{weekday:'long'})}: ${run.distance}km</div>
-                            <div style="color: rgba(26, 26, 26, 0.6); margin-top: 3px;">${run.name}</div>
-                        </div>
-                    `;
-                });
-            
-            if (html === '') {
-                html = '<div style="padding: 10px; color: rgba(26, 26, 26, 0.5);">No upcoming runs</div>';
-            }
-            
-            container.innerHTML = html;
         }
 
         // Render weekly overview tiles
@@ -1170,6 +1056,18 @@
             });
         }
 
+        // Handle toggle run - wrapper for safe calling
+        function handleToggleRun(date) {
+            if (typeof toggleRun === 'function') {
+                toggleRun(date);  // From training_plan.js
+                updateStats();
+                updateProgressBar();
+                updateCountdowns();
+                renderWeeklyView();
+                renderWeeklyOverviewTiles();
+            }
+        }
+
         // Check if week is current/active (based on Monday-Sunday range)
         function isWeekActive(week) {
             const now = new Date(2026, 2, 7);
@@ -1182,72 +1080,6 @@
             const date = new Date(dateString);
             return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         }
-
-        // Switch between views
-        function switchView(view) {
-            const weeklyView = document.getElementById('weeklyView');
-            const tableView = document.getElementById('tableView');
-            const overviewView = document.getElementById('overviewView');
-            const viewWeeksBtn = document.getElementById('viewWeeks');
-            const viewTableBtn = document.getElementById('viewTable');
-            const viewOverviewBtn = document.getElementById('viewOverview');
-            
-            // reset all
-            weeklyView.style.display = 'none';
-            tableView.style.display = 'none';
-            overviewView.style.display = 'none';
-            viewWeeksBtn.style.background = '#f0f0f0';
-            viewTableBtn.style.background = '#f0f0f0';
-            viewOverviewBtn.style.background = '#f0f0f0';
-            
-            if (view === 'weeks') {
-                weeklyView.style.display = 'flex';
-                viewWeeksBtn.style.background = 'var(--utmb-accent)';
-            } else if (view === 'table') {
-                tableView.style.display = 'block';
-                viewTableBtn.style.background = 'var(--utmb-accent)';
-            } else if (view === 'overview') {
-                overviewView.style.display = 'block';
-                viewOverviewBtn.style.background = 'var(--utmb-accent)';
-                renderOverview();
-            }
-        }
-
-        // Render overview table
-        function renderOverview() {
-            const tbody = document.getElementById('overviewTableBody');
-            tbody.innerHTML = '';
-            trainingPlan.weeks.forEach(week => {
-                const totalRuns = week.runs.filter(r => r.type !== 'rest').length;
-                const completedRuns = week.runs.filter(r => r.completed && r.type !== 'rest').length;
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${week.weekNumber}</td>
-                    <td>${week.focus}</td>
-                    <td>${week.weeklyKm}</td>
-                    <td>${week.runs.reduce((sum,r)=> sum+r.elevation,0)}</td>
-                    <td>${totalRuns}</td>
-                    <td>${completedRuns}</td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        // Filter handling
-        document.getElementById('weekFilter').addEventListener('change', () => {
-            renderWeeklyView();
-            renderTableView();
-        });
-
-        document.getElementById('typeFilter').addEventListener('change', () => {
-            renderWeeklyView();
-            renderTableView();
-        });
-
-        document.getElementById('statusFilter').addEventListener('change', () => {
-            renderWeeklyView();
-            renderTableView();
-        });
 
         // Export plan
         function exportPlan() {
@@ -1271,30 +1103,6 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-        }
-
-        // Reset all
-        function resetAll() {
-            if (confirm('Are you sure you want to reset all completed runs? This cannot be undone.')) {
-                trainingPlan.weeks.forEach(week => {
-                    week.runs.forEach(run => {
-                        run.completed = false;
-                    });
-                });
-                
-                updateStats();
-                updateProgressBar();
-                updateCountdowns();
-                renderWeeklyView();
-                renderTableView();
-                renderProgressTimeline();
-                updateUpcomingRuns();
-            }
-        }
-
-        // Connect to Strava (placeholder)
-        function connectStrava() {
-            alert('Strava integration coming soon! For now, you can manually mark your runs as completed in the training schedule.');
         }
 
         // Initialize on page load
