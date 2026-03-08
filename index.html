@@ -153,6 +153,53 @@
             padding: 40px 20px;
         }
 
+        /* Weekly Tiles Overview */
+        .weekly-tiles-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .week-tile {
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border-left: 6px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .week-tile:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+        }
+
+        .week-tile h3 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .week-tile .detail {
+            font-size: 12px;
+            margin-bottom: 8px;
+            opacity: 0.95;
+        }
+
+        .week-tile .progress {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Main Container */
+
         /* Control Panel */
         .controls {
             display: grid;
@@ -435,8 +482,8 @@
             display: grid;
             grid-template-columns: auto 1fr auto;
             gap: 15px;
-            align-items: center;
-            padding: 12px;
+            align-items: start;
+            padding: 16px;
             background: #f9f9f9;
             border-radius: 6px;
             border: 2px solid var(--utmb-border);
@@ -451,7 +498,7 @@
         .run-item.completed {
             background: #f0f9f4;
             border-color: var(--utmb-accent);
-            opacity: 0.8;
+            opacity: 0.95;
         }
 
         .run-checkbox {
@@ -459,6 +506,7 @@
             height: 24px;
             cursor: pointer;
             accent-color: var(--utmb-accent);
+            margin-top: 2px;
         }
 
         .run-details h4 {
@@ -468,11 +516,22 @@
             margin-bottom: 3px;
         }
 
+        .run-details-type {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: rgba(26, 26, 26, 0.6);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
         .run-info {
             display: flex;
             gap: 15px;
             font-size: 12px;
             color: rgba(26, 26, 26, 0.6);
+            margin-bottom: 8px;
+            flex-wrap: wrap;
         }
 
         .run-info span {
@@ -481,15 +540,30 @@
             gap: 5px;
         }
 
+        .run-details-extra {
+            font-size: 12px;
+            color: rgba(26, 26, 26, 0.7);
+            line-height: 1.5;
+            padding-top: 10px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            margin-top: 10px;
+        }
+
+        .run-details-extra strong {
+            font-weight: 700;
+            color: var(--utmb-primary);
+        }
+
         .run-type {
             background: var(--utmb-accent);
             color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
+            padding: 6px 12px;
+            border-radius: 6px;
             font-size: 10px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            white-space: nowrap;
         }
 
         .run-item.completed .run-type {
@@ -781,183 +855,18 @@
 
     <!-- Main Container -->
     <div class="container">
-        <!-- Controls Panel -->
-        <div class="controls">
-            <div class="control-group">
-                <label>Filter by Week</label>
-                <select id="weekFilter">
-                    <option value="">All Weeks</option>
-                    <option value="1">Week 1: Base Building</option>
-                    <option value="2">Week 2: Building Consistency</option>
-                    <option value="3">Week 3: Volume Increase</option>
-                    <option value="4">Week 4: Building Strength</option>
-                    <option value="5">Week 5: Volume Building</option>
-                    <option value="6">Week 6: Peak Building</option>
-                    <option value="7">Week 7: Peak Week 1</option>
-                    <option value="8">Week 8: Peak Week 2</option>
-                    <option value="9">Week 9: Maintain Intensity</option>
-                    <option value="10">Week 10: Maintain Volume</option>
-                    <option value="11">Week 11: Begin Taper</option>
-                    <option value="12">Week 12: Taper Week</option>
-                    <option value="13">Week 13: Final Taper</option>
-                    <option value="14">Week 14: RACE WEEK</option>
-                </select>
-            </div>
-
-            <div class="control-group">
-                <label>Filter by Type</label>
-                <select id="typeFilter">
-                    <option value="">All Types</option>
-                    <option value="trail">Trail Runs</option>
-                    <option value="road">Road Runs</option>
-                    <option value="race">Race</option>
-                </select>
-            </div>
-
-            <div class="control-group">
-                <label>Filter by Status</label>
-                <select id="statusFilter">
-                    <option value="">All Runs</option>
-                    <option value="completed">Completed</option>
-                    <option value="pending">Pending</option>
-                </select>
-            </div>
-
-            <div class="btn-group">
-                <button class="btn" onclick="exportPlan()">📥 Export Plan</button>
-                <button class="btn btn-secondary" onclick="resetAll()">🔄 Reset All</button>
-            </div>
-        </div>
-
-        <!-- Main Content Grid -->
-        <div class="content-grid">
-            <!-- Overview Card -->
-            <div class="card">
-                <h2>📊 Training Overview</h2>
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <h3>Total Training Km</h3>
-                        <span class="value" id="totalKm">0</span>
-                        <span class="unit">km</span>
-                    </div>
-                    <div class="stat-box">
-                        <h3>Total Elevation</h3>
-                        <span class="value" id="totalElevation">0</span>
-                        <span class="unit">m+</span>
-                    </div>
-                    <div class="stat-box">
-                        <h3>Total Runs</h3>
-                        <span class="value" id="totalRuns">0</span>
-                        <span class="unit">sessions</span>
-                    </div>
-                    <div class="stat-box">
-                        <h3>Avg Weekly Km</h3>
-                        <span class="value" id="avgWeeklyKm">0</span>
-                        <span class="unit">km/week</span>
-                    </div>
-                </div>
-                
-                <div style="margin-top: 25px; padding-top: 25px; border-top: 2px solid var(--utmb-border);">
-                    <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px;">Progress This Training Block</h3>
-                    <div class="timeline" id="progressTimeline">
-                        <!-- Populated by JavaScript -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Stats -->
-            <div class="card">
-                <h2>🎯 Quick Stats</h2>
-                <div style="padding: 20px 0;">
-                    <div style="margin-bottom: 25px;">
-                        <h3 style="font-size: 13px; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(26, 26, 26, 0.7);">Completed vs Planned</h3>
-                        <div style="display: flex; gap: 20px; align-items: center;">
-                            <div style="text-align: center;">
-                                <div style="font-size: 28px; font-weight: 800; color: var(--utmb-accent);" id="completedKmQuick">0</div>
-                                <div style="font-size: 11px; color: rgba(26, 26, 26, 0.6); margin-top: 5px;">km Completed</div>
-                            </div>
-                            <div style="text-align: center;">
-                                <div style="font-size: 28px; font-weight: 800; color: var(--trail-orange);" id="remainingKmQuick">1200</div>
-                                <div style="font-size: 11px; color: rgba(26, 26, 26, 0.6); margin-top: 5px;">km Remaining</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="border-top: 2px solid var(--utmb-border); padding-top: 25px;">
-                        <h3 style="font-size: 13px; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(26, 26, 26, 0.7);">Upcoming Runs (Next 7 Days)</h3>
-                        <div id="upcomingRuns" style="display: flex; flex-direction: column; gap: 10px;">
-                            <!-- Populated by JavaScript -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Strava Integration Section -->
-        <div class="strava-section">
-            <h2>🎗️ Connect Strava</h2>
-            <div class="strava-status" id="stravaStatus">
-                Not connected to Strava. Connect to automatically sync your runs.
-            </div>
-            <p style="margin-bottom: 15px; font-size: 13px; color: rgba(26, 26, 26, 0.7);">
-                By connecting Strava, your completed runs will automatically sync with your training plan, helping you track your progress toward the Andorra 80KM race.
-            </p>
-            <button class="strava-button" onclick="connectStrava()">🔗 Connect Strava Account</button>
+        <!-- Weekly Overview Tiles -->
+        <div id="weeklyOverviewTiles" class="weekly-tiles-container">
+            <!-- Populated by JavaScript -->
         </div>
 
         <!-- Training Schedule Section -->
         <div class="card" style="margin-bottom: 40px;">
             <h2>📅 Training Schedule</h2>
-            
-            <!-- View Toggle -->
-            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                <button class="btn" style="flex: 0;" onclick="switchView('weeks')" id="viewWeeks">Schedule</button>
-                <button class="btn btn-secondary" style="flex: 0;" onclick="switchView('table')" id="viewTable">Table</button>
-                <button class="btn btn-secondary" style="flex: 0;" onclick="switchView('overview')" id="viewOverview">Overview</button>
-            </div>
 
             <!-- Weekly View -->
             <div id="weeklyView" class="training-schedule">
                 <!-- Populated by JavaScript -->
-            </div>
-
-            <!-- Table View -->
-            <div id="tableView" style="display: none;">
-                <table class="schedule-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Day</th>
-                            <th>Run Name</th>
-                            <th>Distance</th>
-                            <th>Elevation</th>
-                            <th>Type</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="scheduleTableBody">
-                        <!-- Populated by JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-            <!-- Overview View -->
-            <div id="overviewView" style="display: none;">
-                <h3 style="font-size:16px; font-weight:700; margin-bottom:15px;">Weekly Overview</h3>
-                <table class="schedule-table">
-                    <thead>
-                        <tr>
-                            <th>Week</th>
-                            <th>Focus</th>
-                            <th>Km</th>
-                            <th>Elevation</th>
-                            <th>Runs</th>
-                            <th>Completed</th>
-                        </tr>
-                    </thead>
-                    <tbody id="overviewTableBody">
-                        <!-- Populated by JavaScript -->
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
@@ -980,7 +889,7 @@
         // Initialize dashboard
         function initDashboard() {
             // mark any runs that occurred before 'today' as completed (png runs)
-            const now = new Date(2026, 2, 7);
+            const now = new Date(2026, 2, 8);  // March 8, 2026
             trainingPlan.weeks.forEach(week => {
                 week.runs.forEach(run => {
                     if (run.type !== 'rest' && new Date(run.date) <= now) {
@@ -992,10 +901,8 @@
             updateStats();
             updateProgressBar();
             renderWeeklyView();
-            renderTableView();
-            renderOverview();
+            renderWeeklyOverviewTiles();
             updateCountdowns();
-            renderProgressTimeline();
             updateUpcomingRuns();
         }
 
@@ -1169,14 +1076,12 @@
 
         // Toggle run completion
         function toggleRun(date) {
-            completeRun(date);
+            window.toggleRun(date);  // Calls the toggleRun from training_plan.js which saves to localStorage
             updateStats();
             updateProgressBar();
             updateCountdowns();
             renderWeeklyView();
-            renderTableView();
-            renderProgressTimeline();
-            updateUpcomingRuns();
+            renderWeeklyOverviewTiles();
         }
 
         // Render progress timeline
@@ -1234,6 +1139,35 @@
             }
             
             container.innerHTML = html;
+        }
+
+        // Render weekly overview tiles
+        function renderWeeklyOverviewTiles() {
+            const container = document.getElementById('weeklyOverviewTiles');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            trainingPlan.weeks.forEach(week => {
+                const completedRuns = week.runs.filter(r => r.completed && r.type !== 'rest').length;
+                const totalRuns = week.runs.filter(r => r.type !== 'rest').length;
+                const progressPercent = totalRuns > 0 ? (completedRuns / totalRuns * 100) : 0;
+                
+                const tile = document.createElement('div');
+                tile.className = 'week-tile';
+                tile.style.background = week.color || '#3498db';
+                
+                tile.innerHTML = `
+                    <h3>Week ${week.weekNumber}</h3>
+                    <div class="detail">${week.focus}</div>
+                    <div class="detail">${week.weeklyKm}km • ⬆️ ${week.elevation}m</div>
+                    <div class="progress">
+                        ${completedRuns}/${totalRuns} runs • ${progressPercent.toFixed(0)}%
+                    </div>
+                `;
+                
+                container.appendChild(tile);
+            });
         }
 
         // Check if week is current/active (based on Monday-Sunday range)
