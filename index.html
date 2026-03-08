@@ -315,8 +315,9 @@
         /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
+            margin-bottom: 30px;
         }
 
         .stat-box {
@@ -325,10 +326,17 @@
             padding: 20px;
             border-radius: 8px;
             text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 166, 81, 0.15);
         }
 
         .stat-box h3 {
-            font-size: 14px;
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: rgba(26, 26, 26, 0.7);
@@ -848,7 +856,43 @@
         </div>
     </div>
 
-    <!-- redesigned progress bar placed below header -->
+    <!-- Stats Cards Section -->
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-box">
+                <h3>Total Training</h3>
+                <div class="value" id="totalKm">0</div>
+                <div class="unit">km</div>
+            </div>
+            <div class="stat-box">
+                <h3>Total Elevation</h3>
+                <div class="value" id="totalElevation">0</div>
+                <div class="unit">meters</div>
+            </div>
+            <div class="stat-box">
+                <h3>Total Runs</h3>
+                <div class="value" id="totalRuns">0</div>
+                <div class="unit">workouts</div>
+            </div>
+            <div class="stat-box">
+                <h3>Avg Weekly</h3>
+                <div class="value" id="avgWeeklyKm">0</div>
+                <div class="unit">km/week</div>
+            </div>
+            <div class="stat-box">
+                <h3>Completed</h3>
+                <div class="value" id="completedKmQuick">0</div>
+                <div class="unit">km</div>
+            </div>
+            <div class="stat-box">
+                <h3>Remaining</h3>
+                <div class="value" id="remainingKmQuick">0</div>
+                <div class="unit">km</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- redesigned progress bar placed below stats -->
     <div class="progress-container">
         <div class="progress-bar" id="progressBar" style="width: 0%"></div>
     </div>
