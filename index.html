@@ -765,16 +765,45 @@
         }
 
         @media (max-width: 768px) {
+            .header {
+                padding: 5px 0 0 0;
+            }
+            
             .header-content {
-                padding: 20px 15px;
+                padding: 10px 10px;
+                gap: 15px;
             }
 
             .logo {
-                font-size: 22px;
+                font-size: 18px;
+            }
+
+            .race-info h1 {
+                font-size: 14px;
+            }
+
+            .race-info p {
+                font-size: 11px;
+            }
+
+            .header-stats {
+                gap: 10px;
+            }
+
+            .stat {
+                padding: 8px 12px;
+            }
+
+            .stat-number {
+                font-size: 20px;
+            }
+
+            .stat-label {
+                font-size: 9px;
             }
 
             .container {
-                padding: 20px 15px;
+                padding: 15px 10px;
             }
 
             .controls {
@@ -783,6 +812,7 @@
 
             .stats-grid {
                 grid-template-columns: 1fr;
+                margin-bottom: 10px;
             }
 
             .schedule-table {
@@ -791,7 +821,7 @@
 
             .schedule-table th,
             .schedule-table td {
-                padding: 10px;
+                padding: 8px;
             }
         }
 
@@ -860,11 +890,6 @@
     <div class="container">
         <div class="stats-grid">
             <div class="stat-box">
-                <h3>Total Training</h3>
-                <div class="value" id="totalKm">0</div>
-                <div class="unit">km</div>
-            </div>
-            <div class="stat-box">
                 <h3>Total Elevation</h3>
                 <div class="value" id="totalElevation">0</div>
                 <div class="unit">meters</div>
@@ -880,14 +905,9 @@
                 <div class="unit">km/week</div>
             </div>
             <div class="stat-box">
-                <h3>Completed</h3>
-                <div class="value" id="completedKmQuick">0</div>
-                <div class="unit">km</div>
-            </div>
-            <div class="stat-box">
-                <h3>Remaining</h3>
-                <div class="value" id="remainingKmQuick">0</div>
-                <div class="unit">km</div>
+                <h3>Training Progress</h3>
+                <div class="value" id="trainingProgress">0 / 0 km</div>
+                <div class="unit">completed / total</div>
             </div>
         </div>
     </div>
@@ -932,8 +952,8 @@
     <script>
         // Initialize dashboard
         function initDashboard() {
-            // mark any runs that occurred before 'today' as completed (png runs)
-            const now = new Date(2026, 2, 8);  // March 8, 2026
+            // mark any runs that occurred before 'today' as completed
+            const now = new Date();  // Use current date
             trainingPlan.weeks.forEach(week => {
                 week.runs.forEach(run => {
                     if (run.type !== 'rest' && new Date(run.date) <= now) {
@@ -955,13 +975,11 @@
             const completed = getCompletedKm();
             const completedRuns = getCompletedRunsCount();
             
-            document.getElementById('totalKm').textContent = totals.totalKm.toFixed(0);
             document.getElementById('totalElevation').textContent = totals.totalElevation.toLocaleString();
             document.getElementById('totalRuns').textContent = totals.totalRuns;
             document.getElementById('avgWeeklyKm').textContent = (totals.totalKm / 14).toFixed(1);
             
-            document.getElementById('completedKmQuick').textContent = completed.toFixed(0);
-            document.getElementById('remainingKmQuick').textContent = (totals.totalKm - completed).toFixed(0);
+            document.getElementById('trainingProgress').textContent = `${completed.toFixed(0)} / ${totals.totalKm.toFixed(0)} km`;
             document.getElementById('completedRuns').textContent = completedRuns;
         }
 
@@ -980,7 +998,7 @@
 
         // Update countdown timers
         function updateCountdowns() {
-            const now = new Date(2026, 2, 7); // March 7, 2026
+            const now = new Date(); // Use current date
             const raceDate = new Date(2026, 5, 12); // June 12, 2026
             
             const daysUntil = Math.ceil((raceDate - now) / (1000 * 60 * 60 * 24));
@@ -1114,7 +1132,7 @@
 
         // Check if week is current/active (based on Monday-Sunday range)
         function isWeekActive(week) {
-            const now = new Date(2026, 2, 7);
+            const now = new Date();
             const range = weekRange(week);
             return now >= range.monday && now <= range.sunday;
         }
