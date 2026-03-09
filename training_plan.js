@@ -73,14 +73,15 @@ const trainingPlan = {
       weekNumber: 0,
       startDate: "2026-03-02",
       endDate: "2026-03-08",
-      weeklyKm: 14.88,
-      elevation: 78,
+      weeklyKm: 24.5,
+      elevation: 278,
       focus: "Prior Training",
       color: "#9b59b6",
       runs: [
         { date: "2026-03-03", dayName: "Tuesday", name: "Easy Run", distance: 5.9, elevation: 0, type: "road", pace: "6:30-7:00/km", details: "Recovery run", location: "City run", completed: true },
         { date: "2026-03-05", dayName: "Thursday", name: "Easy Run", distance: 4.9, elevation: 0, type: "road", pace: "6:30-7:00/km", details: "Easy pace", location: "City run", completed: true },
-        { date: "2026-03-08", dayName: "Sunday", name: "Trail Run", distance: 4, elevation: 78, type: "trail", pace: "6:30-7:00/km", details: "Short trail", location: "Local trails", completed: true }
+        { date: "2026-03-07", dayName: "Saturday", name: "Trail Run", distance: 4, elevation: 78, type: "trail", pace: "6:30-7:00/km", details: "Short trail", location: "Local trails", completed: true },
+        { date: "2026-03-08", dayName: "Sunday", name: "Long Run", distance: 9.7, elevation: 200, type: "trail", pace: "6:30-7:00/km", details: "Extended trail run", location: "Local trails", completed: true }
       ]
     },
     {
