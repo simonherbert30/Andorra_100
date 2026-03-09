@@ -765,12 +765,32 @@
         }
 
         @media (max-width: 768px) {
+            .header {
+                padding: 10px 0 0 0;
+            }
+            
             .header-content {
-                padding: 20px 15px;
+                padding: 15px 15px;
             }
 
             .logo {
-                font-size: 22px;
+                font-size: 20px;
+            }
+
+            .race-info h1 {
+                font-size: 16px;
+            }
+
+            .race-info p {
+                font-size: 12px;
+            }
+
+            .stat-number {
+                font-size: 24px;
+            }
+
+            .stat-label {
+                font-size: 10px;
             }
 
             .container {
@@ -783,6 +803,7 @@
 
             .stats-grid {
                 grid-template-columns: 1fr;
+                margin-bottom: 15px;
             }
 
             .schedule-table {
@@ -880,14 +901,9 @@
                 <div class="unit">km/week</div>
             </div>
             <div class="stat-box">
-                <h3>Completed</h3>
-                <div class="value" id="completedKmQuick">0</div>
-                <div class="unit">km</div>
-            </div>
-            <div class="stat-box">
-                <h3>Remaining</h3>
-                <div class="value" id="remainingKmQuick">0</div>
-                <div class="unit">km</div>
+                <h3>Training Progress</h3>
+                <div class="value" id="trainingProgress">0 / 0 km</div>
+                <div class="unit">completed / total</div>
             </div>
         </div>
     </div>
@@ -960,8 +976,7 @@
             document.getElementById('totalRuns').textContent = totals.totalRuns;
             document.getElementById('avgWeeklyKm').textContent = (totals.totalKm / 14).toFixed(1);
             
-            document.getElementById('completedKmQuick').textContent = completed.toFixed(0);
-            document.getElementById('remainingKmQuick').textContent = (totals.totalKm - completed).toFixed(0);
+            document.getElementById('trainingProgress').textContent = `${completed.toFixed(0)} / ${totals.totalKm.toFixed(0)} km`;
             document.getElementById('completedRuns').textContent = completedRuns;
         }
 
